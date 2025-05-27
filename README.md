@@ -1,88 +1,131 @@
-# 🚀 Motus
-**Auteur : antcamarasa**
+# 📦 Projet Motus — Application Complète
 
-> **Motus** est une implémentation moderne du jeu de lettres *Motus*, avec :
-> - Authentification sécurisée
-> - Grille interactive avec indices colorés
-> - API RESTive et UI réactive
-> - Classement des meilleurs joueurs
+Ce projet se compose de deux parties :
+
+1. **Backend Spring Boot (Java 17)** : API REST pour gérer le jeu Motus (authentification, mots, scores).
+2. **Frontend React (Node.js / npm)** : SPA pour jouer, s'inscrire, se connecter et consulter le classement.
 
 ---
 
-## 🎯 Fonctionnalités principales
+## 🛠 Prérequis
 
-- 🔐 **Inscription / connexion** via nom d’utilisateur et mot de passe (BCrypt)
-- 🎮 **Démarrage de partie** : choix de la longueur et du niveau de difficulté
-- 🟥🟡🔵 **Affichage de la grille** :
-  - **Rouge** : lettre bien placée
-  - **Jaune** : lettre présente mais mal placée
-  - **Bleu** : lettre absente
-- 🏆 **Classement** : top 10 des joueurs selon leurs scores
-- 📱 **Responsive** : UI adaptée mobile et desktop
+* **Java 17** (Testé avec OpenJDK 17)
+* **Maven 3.8+**
+* **Node.js 16+** et **npm 8+**
+* **Git** (pour cloner le dépôt)
 
----
+Vérifiez vos versions :
 
-## 📦 Structure du projet
-
+```bash
+java -version   # doit afficher 17.x
+mvn -v          # doit afficher Maven 3.x
+node -v         # doit afficher Node.js >=16.x
+npm -v          # doit afficher npm >=8.x
 ```
-Motus/
-├── backend/       # API Spring Boot
-│   ├── src/main/java/com/motus
-│   ├── src/main/resources
-│   └── pom.xml
-├── frontend/      # Application React
-│   ├── public/
+
+---
+
+## 📂 Structure du projet
+
+```text
+motus/
+├── backend/      # Application Spring Boot
+│   ├── pom.xml
 │   └── src/
-│       ├── components/
-│       └── api.js
-├── .gitignore
-└── README.md      # Documentation du projet
+└── frontend/     # Application React
+    ├── package.json
+    └── src/
 ```
 
 ---
 
-## 🔧 Prérequis
+## 🚀 Démarrer le Backend
 
-- Java 11+ & Maven
-- Node.js 14+ & npm
-- Git (pour le contrôle de version)
+1. Placez-vous dans `backend/` :
+
+   ```bash
+   cd motus/backend
+   ```
+2. Compilez et installez :
+
+   ```bash
+   mvn clean install
+   ```
+3. Lancez l'API :
+
+   ```bash
+   mvn spring-boot:run
+   ```
+
+* L'application écoute sur le port **8080**.
+* Console H2 : `http://localhost:8080/h2-console`.
+
+### ⚙️ Configuration CORS (optionnel)
+
+En cas d’erreur CORS, ajoutez dans `SecurityConfig` :
+
+```java
+http.cors();
+
+@Bean
+public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration config = new CorsConfiguration();
+    config.setAllowedOrigins(List.of("http://localhost:3000"));
+    config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
+    config.setAllowedHeaders(List.of("*"));
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", config);
+    return source;
+}
+```
 
 ---
 
-## 🚀 Installation & lancement
+## 🚀 Démarrer le Frontend
 
-### 1. Cloner le dépôt
-```bash
-git clone https://github.com/antcamarasa/Motus.git
-cd Motus
-```
+1. Placez-vous dans `frontend/` :
 
-### 2. Backend (Spring Boot)
-```bash
-cd backend
-mvn clean install
-mvn spring-boot:run
-```
-> L’API tourne par défaut sur `http://localhost:8080/api`
+   ```bash
+   cd motus/frontend
+   ```
+2. Installez les dépendances :
 
-### 3. Frontend (React)
-```bash
-cd ../frontend
-npm install
-npm start
-```
-> L’application démarre sur `http://localhost:3000`
+   ```bash
+   npm install
+   ```
+3. En cas d’erreur `ERR_OSSL_EVP_UNSUPPORTED` :
+
+   ```bash
+   export NODE_OPTIONS=--openssl-legacy-provider
+   ```
+4. Lancez l’application React :
+
+   ```bash
+   npm start
+   ```
+
+* L’interface est accessible sur le port **3000**.
+* Les appels API pointent vers `http://localhost:8080/api`.
+
+---
+
+## 🔗 Intégration Front/Back
+
+* Le front communique avec l’API en `http://localhost:8080/api` (cf. `src/api.js`).
+* Les routes protégées nécessitent une authentification HTTP Basic.
 
 ---
 
-## 🧩 Endpoints clés
+## 🧪 Tests & Vérification
 
-| Route                       | Méthode | Description                         |
-|-----------------------------|---------|-------------------------------------|
-| `/api/auth/register`        | POST    | Créer un compte (pseudo, mot de passe) |
-| `/api/auth/login`           | POST    | Authentification (basic auth ou JWT) |
-| `/api/game/start`           | POST    | Démarrer une partie (longueur, difficulté) |
-| `/api/game/play`            | POST    | Soumettre une proposition (guess)   |
-| `/api/ranking`              | GET     | Récupérer le top 10 des scores      |
+* **Backend** : testez via Postman ou `curl`.
+* **Frontend** : naviguez, inscrivez-vous, connectez-vous et jouez.
 
 ---
+
+## 📁 À Rendre
+
+* Le dossier complet `motus/` (backend + frontend).
+* Ce fichier `README.md`.
+
+> **Bonne évaluation !**
